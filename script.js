@@ -3,9 +3,10 @@ let containerSelector = document.querySelector(".root");
 let filter = "ALL"; // one of ALL, DONE, NOT-DONE
 let sort = "ASCENDING"; // ASCENDING or DESCENDING
 let searchPhrase = "";
-let searchInputIsFocused = false;
-let newToDoName = "";
-let newToDoInputIsFocused = false;
+let searchInputIsFocused=false
+newToDoInputIsFocused = false
+
+
 const generateId = () => {
   return Math.floor(Math.random() * 100000);
 };
@@ -14,7 +15,7 @@ let tasks = [
   {
     id: generateId(),
     name: "Wynieść śmieci",
-    isCompleted: false,
+    isCompleted: true,
   },
 ];
 
@@ -36,7 +37,7 @@ const appendArray = function (array, container) {
 
 const renderInputElement = (
   onChange,
-  focusCondition,
+ condition,
   className,
   type,
   placeholder
@@ -45,8 +46,8 @@ const renderInputElement = (
   input.setAttribute("type", type);
   input.setAttribute("placeholder", placeholder);
   input.classList.add(className);
-  input.addEventListener("change", onChange);
-  focus(focusCondition, input);
+  input.addEventListener("input", onChange);
+  focus(condition, input);
   return input;
 };
 
@@ -58,13 +59,12 @@ const renderButtonElement = (onClick, className, label) => {
   return button;
 };
 
-
-
 const renderFormElement = () => {
   const container = document.createElement("div");
   container.classList.add("container");
   const form = document.createElement("form");
   form.classList.add("form");
+  searchInputIsFocused=false
   newToDoInputIsFocused = true;
   const inputElement = renderInputElement(
     null,
@@ -80,6 +80,7 @@ const renderFormElement = () => {
   return container;
 };
 // Funkcje zmiany stanu
+
 const filterByCompleted = function (task) {
   if (filter === 'ALL') return true
 
@@ -88,6 +89,54 @@ const filterByCompleted = function (task) {
   if (filter === 'NOT-DONE') return !task.isCompleted
 
   return true
+}
+const selectFilter = (e) => {
+  filter = e.target.innerHTML
+  update()
+}
+
+renderButtonsFilter=()=>{
+  const container = document.createElement("div");
+  container.classList.add("container");
+  const buttonAll = renderButtonElement(selectFilter, "button-filter", "ALL");
+  const buttonDone = renderButtonElement(selectFilter, "button-filter", "DONE");
+  const buttonNotDone = renderButtonElement(selectFilter, "button-filter", "NOT-DONE");
+  container.appendChild(buttonAll);
+  container.appendChild(buttonDone);
+  container.appendChild(buttonNotDone);
+  return container;
+}
+
+const onSearchPhraseChange = function (event) {
+  
+  searchInputIsFocused = true
+  newToDoInputIsFocused = false
+  searchPhrase = event.target.value
+  console.log(searchPhrase)
+  update()
+}
+
+const filterBySearchPhrase = function (task) {
+  const name = task.name.toLowerCase()
+  const search = searchPhrase.toLowerCase()
+
+  if (name.includes(search)) return true
+
+  return false
+}
+
+renderInputSearch = () => {
+  const container = document.createElement("div");
+  container.classList.add("container");
+  const input = renderInputElement(
+    onSearchPhraseChange,
+    searchInputIsFocused,
+    "input-search",
+    "text",
+    "Search🔎"
+  );
+  container.appendChild(input);
+  return container;
 }
 
 const renderTask = (task) => {
@@ -109,7 +158,6 @@ const renderTask = (task) => {
   li.appendChild(wrapper);
   return li;
 };
-
 
 const addTask = (e) => {
   e.preventDefault();
@@ -156,15 +204,23 @@ const renderTasks = (tasks) => {
   return container;
 };
 
-const render = (containerSelector) => {
-  const filteredTasks = tasks.filter(filterByCompleted);
-  containerSelector.appendChild(renderFormElement());
-  containerSelector.appendChild(renderTasks(filteredTasks));
-};
-
-render(containerSelector);
-
 const update = function () {
   containerSelector.innerHTML = "";
   render(containerSelector);
 };
+
+const render = (containerSelector) => {
+  const filteredTasks = tasks
+  .filter(filterByCompleted)
+  .filter(filterBySearchPhrase);
+
+  containerSelector.appendChild(renderButtonsFilter());
+  containerSelector.appendChild(renderInputSearch());
+  containerSelector.appendChild(renderFormElement());
+  containerSelector.appendChild(renderTasks(filteredTasks));
+ 
+
+};
+update();
+
+

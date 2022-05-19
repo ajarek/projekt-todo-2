@@ -8,8 +8,13 @@ body{
    font-family: 'Roboto', sans-serif;
    width: 100%;
    min-height: 100vh;
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-start;
+   align-items: center;
 }
 .root{
+   max-width: 800px;
    width: 100%;
    min-height: 100%;
    display: flex;
@@ -30,7 +35,7 @@ body{
    align-items: flex-start;
    
 }
-.form .input{
+.form .input,.input-search{
    width: 80%;
    height: 3rem;
    border-radius: .5rem;
@@ -39,6 +44,10 @@ body{
    font-size: 1.2rem;
    border:1px solid gray;
    outline: none;
+}
+.input-search{
+   width: 100%;
+  height: 2rem; 
 }
 .form .button{
    width: 20%;
@@ -96,4 +105,14 @@ body{
    text-decoration: line-through; 
    
    
+}
+.button-filter{
+   width: 33%;
+   height: 2rem;
+   border-radius: 5px;
+   border: none;
+   background-color: blue;
+   color: #fff;
+   box-shadow: 1px 1px 3px 0px rgba(66, 68, 90, 1);
+   cursor: pointer;
 }
