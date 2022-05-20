@@ -55,7 +55,7 @@ body{
    border-radius: .5rem;
    padding: .5rem;
    margin: .5rem;
-   background-color: #00bcd4;
+   background-color: #2ecc71;
    color: #fff;
    font-weight: bold;
    cursor: pointer;
@@ -64,7 +64,7 @@ body{
    box-shadow: 2px 2px 6px 0px rgba(66, 68, 90, 1);
 }
 .form .button:hover{
-   background-color: #00acc1;
+   background-color: #27ae60;
 }
  .container-list{
    width: 100%;
@@ -93,26 +93,38 @@ body{
    height: 2rem;
    border-radius: 5px;
    border: none;
-   background-color: #eb3c3c;
+   background-color: #e74c3c;
    color: #fff;
    box-shadow: 1px 1px 3px 0px rgba(66, 68, 90, 1);
    cursor: pointer;
 }
 .button-delete:hover{
-   background-color: #aa1717;
+   background-color: #b31604;
 }
 .completed{
    text-decoration: line-through; 
    
    
 }
-.button-filter{
+.button-filter,.button-sort{
    width: 33%;
    height: 2rem;
    border-radius: 5px;
    border: none;
-   background-color: blue;
+   background-color: #3498db;
    color: #fff;
    box-shadow: 1px 1px 3px 0px rgba(66, 68, 90, 1);
    cursor: pointer;
+   margin-bottom: 10px;
 }
+.button-sort{
+   background-color: #e67e22;
+}
+.button-filter:hover{
+   background-color: #2980b9;
+}
+
+.button-sort:hover{
+   background-color: #d35400;
+}
+  
