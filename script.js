@@ -4,8 +4,8 @@ let filter = "ALL"; // one of ALL, DONE, NOT-DONE
 let sort = "ASCENDING"; // ASCENDING or DESCENDING
 let searchPhrase = "";
 let searchInputIsFocused=false
-newToDoInputIsFocused = false
-
+let newToDoInputIsFocused = true
+let newToDoName = ""
 
 const generateId = () => {
   return Math.floor(Math.random() * 100000);
@@ -37,6 +37,7 @@ const appendArray = function (array, container) {
 
 const renderInputElement = (
   onChange,
+  value,
  condition,
   className,
   type,
@@ -46,6 +47,7 @@ const renderInputElement = (
   input.setAttribute("type", type);
   input.setAttribute("placeholder", placeholder);
   input.classList.add(className);
+  input.value=value
   input.addEventListener("input", onChange);
   focus(condition, input);
   return input;
@@ -64,10 +66,9 @@ const renderFormElement = () => {
   container.classList.add("container");
   const form = document.createElement("form");
   form.classList.add("form");
-  searchInputIsFocused=false
-  newToDoInputIsFocused = true;
   const inputElement = renderInputElement(
     null,
+    newToDoName,
     newToDoInputIsFocused,
     "input",
     "text",
@@ -108,11 +109,10 @@ renderButtonsFilter=()=>{
 }
 
 const onSearchPhraseChange = function (event) {
-  
-  searchInputIsFocused = true
-  newToDoInputIsFocused = false
+  newToDoInputIsFocused = false;
+  searchInputIsFocused = true;
+  focus(searchInputIsFocused, event.target)
   searchPhrase = event.target.value
-  console.log(searchPhrase)
   update()
 }
 
@@ -130,6 +130,7 @@ renderInputSearch = () => {
   container.classList.add("container");
   const input = renderInputElement(
     onSearchPhraseChange,
+    searchPhrase,
     searchInputIsFocused,
     "input-search",
     "text",
@@ -162,6 +163,8 @@ const renderTask = (task) => {
 const addTask = (e) => {
   e.preventDefault();
   containerSelector.innerHTML = "";
+  newToDoInputIsFocused = true;
+ searchInputIsFocused=false
   const newTask = e.target.parentNode.firstChild.value;
   if(newTask === ""){
     alert("Wpisz nazwę zadania");
