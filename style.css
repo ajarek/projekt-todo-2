@@ -120,6 +120,7 @@ body{
 .button-sort{
    background-color: #e67e22;
 }
+
 .button-filter:hover{
    background-color: #2980b9;
 }
@@ -127,4 +128,6 @@ body{
 .button-sort:hover{
    background-color: #d35400;
 }
-  
+.active{
+   background-color: black;
+}
