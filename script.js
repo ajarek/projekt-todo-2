@@ -1,26 +1,26 @@
 (function(){
-//Stan aplikacji:
 
-const myContainer='.root';
-let containerSelector = document.querySelector(myContainer);
-let filter = "ALL"; 
-let sort = "NONE"; 
-let searchPhrase = "";
-let searchInputIsFocused = false;
-let newToDoInputIsFocused = true;
-let newToDoName = "";
-let tasks = [];
+//Stan aplikacji:
+const myContainer='.root'
+let containerSelector = document.querySelector(myContainer)
+let filter = "ALL" 
+let sort = "NONE" 
+let searchPhrase = ""
+let searchInputIsFocused = false
+let newToDoInputIsFocused = true
+let newToDoName = ""
+let tasks = []
 
 const loadFromLocalStorage = () => {
-  const state =JSON.parse(localStorage.getItem("todo"));
-if(!state) return;
-  filter = state.filter;
-  sort = state.sort;
-  searchPhrase = state.searchPhrase;
-  searchInputIsFocused = state.searchInputIsFocused;
-  newToDoInputIsFocused = state.newToDoInputIsFocused;
-  newToDoName = state.newToDoName;
-  tasks = state.tasks;
+  const state =JSON.parse(localStorage.getItem("todo"))
+if(!state) return
+  filter = state.filter
+  sort = state.sort
+  searchPhrase = state.searchPhrase
+  searchInputIsFocused = state.searchInputIsFocused
+  newToDoInputIsFocused = state.newToDoInputIsFocused
+  newToDoName = state.newToDoName
+  tasks = state.tasks
 }
 
 const saveToLocalStorage = () => {
@@ -33,23 +33,23 @@ const saveToLocalStorage = () => {
  newToDoName : newToDoName,
  tasks : tasks,
   }
-  localStorage.setItem("todo", JSON.stringify(state));
-};
-// Ogólne / funkcje pomocnicze
+  localStorage.setItem("todo", JSON.stringify(state))
+}
 
+// Ogólne / funkcje pomocnicze
 const focus = function (condition, element) {
   if (condition) {
     setTimeout(function () {
-      element.focus();
-    }, 0);
+      element.focus()
+    }, 0)
   }
-};
+}
 
 const appendArray = function (array, container) {
   array.forEach(function (element) {
-    container.appendChild(element);
-  });
-};
+    container.appendChild(element)
+  })
+}
 
 const renderInputElement = (
   onChange,
@@ -59,29 +59,29 @@ const renderInputElement = (
   type,
   placeholder
 ) => {
-  const input = document.createElement("input");
-  input.setAttribute("type", type);
-  input.setAttribute("placeholder", placeholder);
-  input.classList.add(className);
-  input.value = value;
-  input.addEventListener("input", onChange);
-  focus(condition, input);
-  return input;
-};
+  const input = document.createElement("input")
+  input.setAttribute("type", type)
+  input.setAttribute("placeholder", placeholder)
+  input.classList.add(className)
+  input.value = value
+  input.addEventListener("input", onChange)
+  focus(condition, input)
+  return input
+}
 
 const renderButtonElement = (onClick, className, label) => {
-  const button = document.createElement("button");
-  button.classList.add(className);
-  button.addEventListener("click", onClick);
-  button.innerHTML = label;
-  return button;
-};
+  const button = document.createElement("button")
+  button.classList.add(className)
+  button.addEventListener("click", onClick)
+  button.innerHTML = label
+  return button
+}
 
 const renderFormElement = () => {
-  const container = document.createElement("div");
-  container.classList.add("container");
-  const form = document.createElement("form");
-  form.classList.add("form");
+  const container = document.createElement("div")
+  container.classList.add("container")
+  const form = document.createElement("form")
+  form.classList.add("form")
   const inputElement = renderInputElement(
     null,
     newToDoName,
@@ -89,94 +89,97 @@ const renderFormElement = () => {
     "input",
     "text",
     "Enter your task"
-  );
-  const buttonElement = renderButtonElement(addTask, "button", "Add");
-  form.appendChild(inputElement);
-  form.appendChild(buttonElement);
-  container.appendChild(form);
-  return container;
-};
+  )
+  const buttonElement = renderButtonElement(addTask, "button", "Add")
+  form.appendChild(inputElement)
+  form.appendChild(buttonElement)
+  container.appendChild(form)
+  return container
+}
 
 const generateId = () => {
-  return Math.floor(Math.random() * 100000);
-};
+  return Math.floor(Math.random() * 100000)
+}
 
 // Funkcje zmiany stanu
 const sortDescending = function (taskA, taskB) {
   return -(taskA.name.localeCompare(taskB.name))
 }
+
 const sortAscending = function (taskA, taskB) {
   return taskA.name.localeCompare(taskB.name)
 }
+
 const sortNone = function (taskA, taskB) { return 0 }
 
 const selectSort = (e) => {
-  sort = e.target.innerHTML;
-  update();
-};
+  sort = e.target.innerHTML
+  update()
+}
 
 renderButtonsSort = () => {
-  const container = document.createElement("div");
-  container.classList.add("container");
-  const buttonDescending = renderButtonElement(selectSort, "button-sort", "DESCENDING");
-  const buttonAscending = renderButtonElement(selectSort, "button-sort", "ASCENDING");
-  const buttonNone = renderButtonElement(selectSort,"button-sort","NONE" );
-  container.appendChild(buttonDescending);
-  container.appendChild(buttonAscending);
-  container.appendChild(buttonNone);
-  return container;
-};
+  const container = document.createElement("div")
+  container.classList.add("container")
+  const buttonDescending = renderButtonElement(selectSort, "button-sort", "DESCENDING")
+  const buttonAscending = renderButtonElement(selectSort, "button-sort", "ASCENDING")
+  const buttonNone = renderButtonElement(selectSort,"button-sort","NONE" )
+  container.appendChild(buttonDescending)
+  container.appendChild(buttonAscending)
+  container.appendChild(buttonNone)
+  return container
+}
 
 const filterByCompleted = function (task) {
-  if (filter === "ALL") return true;
+  if (filter === "ALL") return true
 
-  if (filter === "DONE") return task.isCompleted;
+  if (filter === "DONE") return task.isCompleted
 
-  if (filter === "NOT-DONE") return !task.isCompleted;
+  if (filter === "NOT-DONE") return !task.isCompleted
 
-  return true;
-};
+  return true
+}
+
 const selectFilter = (e) => {
-  filter = e.target.innerHTML;
-  update();
-};
+  filter = e.target.innerHTML
+  update()
+}
 
 renderButtonsFilter = () => {
-  const container = document.createElement("div");
-  container.classList.add("container");
-  const buttonAll = renderButtonElement(selectFilter, "button-filter", "ALL");
-  const buttonDone = renderButtonElement(selectFilter, "button-filter", "DONE");
+  const container = document.createElement("div")
+  container.classList.add("container")
+  const buttonAll = renderButtonElement(selectFilter, "button-filter", "ALL")
+  const buttonDone = renderButtonElement(selectFilter, "button-filter", "DONE")
   const buttonNotDone = renderButtonElement(
     selectFilter,
     "button-filter",
     "NOT-DONE"
-  );
-  container.appendChild(buttonAll);
-  container.appendChild(buttonDone);
-  container.appendChild(buttonNotDone);
-  return container;
-};
+  )
+  container.appendChild(buttonAll)
+  container.appendChild(buttonDone)
+  container.appendChild(buttonNotDone)
+  return container
+}
 
 const onSearchPhraseChange = function (event) {
-  newToDoInputIsFocused = false;
-  searchInputIsFocused = true;
-  focus(searchInputIsFocused, event.target);
-  searchPhrase = event.target.value;
-  update();
-};
+  newToDoInputIsFocused = false
+  searchInputIsFocused = true
+  focus(searchInputIsFocused, event.target)
+  searchPhrase = event.target.value
+  update()
+}
 
 const filterBySearchPhrase = function (task) {
-  const name = task.name.toLowerCase();
-  const search = searchPhrase.toLowerCase();
+  const name = task.name.toLowerCase()
+  const search = searchPhrase.toLowerCase()
 
-  if (name.includes(search)) return true;
+  if (name.includes(search)) return true
 
-  return false;
-};
+  return false
+}
 
 renderInputSearch = () => {
-  const container = document.createElement("div");
-  container.classList.add("container");
+  const container = document.createElement("div")
+  container.classList.add("container")
   const input = renderInputElement(
     onSearchPhraseChange,
     searchPhrase,
@@ -184,85 +187,84 @@ renderInputSearch = () => {
     "input-search",
     "text",
     "Search🔎"
-  );
-  container.appendChild(input);
-  return container;
-};
+  )
+  container.appendChild(input)
+  return container
+}
 
 const renderTask = (task) => {
-  const li = document.createElement("li");
-  li.classList.add("list-item");
-  const wrapper = document.createElement("div");
-  wrapper.classList.add("wrapper");
-  const span = document.createElement("span");
-  span.classList.add("task-name");
-  span.dataset.id = task.id;
-  span.innerHTML = task.name;
+  const li = document.createElement("li")
+  li.classList.add("list-item")
+  const wrapper = document.createElement("div")
+  wrapper.classList.add("wrapper")
+  const span = document.createElement("span")
+  span.classList.add("task-name")
+  span.dataset.id = task.id
+  span.innerHTML = task.name
   if (task.isCompleted === true) {
-    span.classList.add("completed");
+    span.classList.add("completed")
   }
-  span.addEventListener("click", onToggleIsCompleted);
-  const button = renderButtonElement(deleteTask, "button-delete", "X");
-  button.dataset.id = task.id;
-  wrapper.append(span, button);
-  li.appendChild(wrapper);
-  return li;
-};
+  span.addEventListener("click", onToggleIsCompleted)
+  const button = renderButtonElement(deleteTask, "button-delete", "X")
+  button.dataset.id = task.id
+  wrapper.append(span, button)
+  li.appendChild(wrapper)
+  return li
+}
 
 const addTask = (e) => {
-  e.preventDefault();
-  containerSelector.innerHTML = "";
-  newToDoInputIsFocused = true;
-  searchInputIsFocused = false;
-  const newTask = e.target.parentNode.firstChild.value;
+  e.preventDefault()
+  containerSelector.innerHTML = ""
+  newToDoInputIsFocused = true
+  searchInputIsFocused = false
+  const newTask = e.target.parentNode.firstChild.value
   if (newTask === "") {
-    alert("Enter a name for the task");
+    alert("Enter a name for the task")
   } else {
     tasks = tasks.concat({
       id: generateId(),
       name: newTask,
       isCompleted: false,
-    });
+    })
   }
-  update();
-};
+  update()
+}
 
 const onToggleIsCompleted = (e) => {
-  e.preventDefault();
-  const id = Number(e.target.dataset.id);
+  e.preventDefault()
+  const id = Number(e.target.dataset.id)
   tasks = tasks.map((task) => {
     if (task.id === id) {
       if (task.isCompleted === false) {
-        task.isCompleted = true;
+        task.isCompleted = true
       } else {
-        task.isCompleted = false;
+        task.isCompleted = false
       }
     }
-    return task;
-  });
-  update();
-};
+    return task
+  })
+  update()
+}
 
 const deleteTask = (e) => {
-  let idDelete = Number(e.target.dataset.id);
-  tasks = tasks.filter((task) => task.id !== idDelete);
-  update();
-};
+  let idDelete = Number(e.target.dataset.id)
+  tasks = tasks.filter((task) => task.id !== idDelete)
+  update()
+}
 
 const renderTasks = (tasks) => {
-  const container = document.createElement("ol");
-  container.classList.add("container-list");
-  const newTasks = tasks.map((el, index) => renderTask(el, index));
-  appendArray(newTasks, container);
-  return container;
-};
+  const container = document.createElement("ol")
+  container.classList.add("container-list")
+  const newTasks = tasks.map((el, index) => renderTask(el, index))
+  appendArray(newTasks, container)
+  return container
+}
 
 const update = function () {
-  containerSelector.innerHTML = "";
-  render(containerSelector);
+  containerSelector.innerHTML = ""
+  render(containerSelector)
   saveToLocalStorage()
-};
-
+}
 
 const render = (containerSelector) => {
   const filteredTasks = tasks
@@ -282,14 +284,13 @@ const render = (containerSelector) => {
         return sortDescending(taskA, taskB)
     })
 
-    
-  containerSelector.appendChild(renderButtonsSort());
-  containerSelector.appendChild(renderButtonsFilter());
-  containerSelector.appendChild(renderInputSearch());
-  containerSelector.appendChild(renderFormElement());
-  containerSelector.appendChild(renderTasks(sortedTasks));
-};
+  containerSelector.appendChild(renderButtonsSort())
+  containerSelector.appendChild(renderButtonsFilter())
+  containerSelector.appendChild(renderInputSearch())
+  containerSelector.appendChild(renderFormElement())
+  containerSelector.appendChild(renderTasks(sortedTasks))
+}
 
 loadFromLocalStorage()
-update();
+update()
 })()
