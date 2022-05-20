@@ -1,8 +1,8 @@
+(function(){
 //Stan aplikacji:
-const generateId = () => {
-  return Math.floor(Math.random() * 100000);
-};
-let containerSelector = document.querySelector(".root");
+
+const myContainer='.root';
+let containerSelector = document.querySelector(myContainer);
 let filter = "ALL"; 
 let sort = "NONE"; 
 let searchPhrase = "";
@@ -22,8 +22,6 @@ if(!state) return;
   newToDoName = state.newToDoName;
   tasks = state.tasks;
 }
-
-
 
 const saveToLocalStorage = () => {
   const state={
@@ -98,6 +96,11 @@ const renderFormElement = () => {
   container.appendChild(form);
   return container;
 };
+
+const generateId = () => {
+  return Math.floor(Math.random() * 100000);
+};
+
 // Funkcje zmiany stanu
 const sortDescending = function (taskA, taskB) {
   return -(taskA.name.localeCompare(taskB.name))
@@ -286,5 +289,7 @@ const render = (containerSelector) => {
   containerSelector.appendChild(renderFormElement());
   containerSelector.appendChild(renderTasks(sortedTasks));
 };
+
 loadFromLocalStorage()
 update();
+})()
