@@ -100,7 +100,6 @@ const sortNone = function (taskA, taskB) { return 0 }
 
 const selectSort = (e) => {
   sort = e.target.innerHTML;
-  console.log(sort);
   update();
 };
 
