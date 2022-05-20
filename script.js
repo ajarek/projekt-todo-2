@@ -1,33 +1,42 @@
 //Stan aplikacji:
+const generateId = () => {
+  return Math.floor(Math.random() * 100000);
+};
 let containerSelector = document.querySelector(".root");
-let filter = "ALL"; // one of ALL, DONE, NOT-DONE
-let sort = "DESCENDING"; //NONE ASCENDING or DESCENDING
+let filter = "ALL"; 
+let sort = "NONE"; 
 let searchPhrase = "";
 let searchInputIsFocused = false;
 let newToDoInputIsFocused = true;
 let newToDoName = "";
+let tasks = [];
 
-const generateId = () => {
-  return Math.floor(Math.random() * 100000);
+const loadFromLocalStorage = () => {
+  const state =JSON.parse(localStorage.getItem("todo"));
+if(!state) return;
+  filter = state.filter;
+  sort = state.sort;
+  searchPhrase = state.searchPhrase;
+  searchInputIsFocused = state.searchInputIsFocused;
+  newToDoInputIsFocused = state.newToDoInputIsFocused;
+  newToDoName = state.newToDoName;
+  tasks = state.tasks;
+}
+
+
+
+const saveToLocalStorage = () => {
+  const state={
+ filter : filter,
+ sort : sort,
+ searchPhrase : searchPhrase,
+ searchInputIsFocused : searchInputIsFocused,
+ newToDoInputIsFocused : newToDoInputIsFocused,
+ newToDoName : newToDoName,
+ tasks : tasks,
+  }
+  localStorage.setItem("todo", JSON.stringify(state));
 };
-let tasks = [
-  {
-    id: generateId(),
-    name: "Zrobić zakupy",
-    isCompleted: false,
-  },
-  {
-    id: generateId(),
-    name: "Wynieść śmieci",
-    isCompleted: false,
-  },
-  {
-    id: generateId(),
-    name: "Przygotować kolacje",
-    isCompleted: false,
-  },
-];
-
 // Ogólne / funkcje pomocnicze
 
 const focus = function (condition, element) {
@@ -248,7 +257,9 @@ const renderTasks = (tasks) => {
 const update = function () {
   containerSelector.innerHTML = "";
   render(containerSelector);
+  saveToLocalStorage()
 };
+
 
 const render = (containerSelector) => {
   const filteredTasks = tasks
@@ -259,6 +270,7 @@ const render = (containerSelector) => {
     .slice()
     .sort(function (taskA, taskB) {
         if (sort === 'NONE') {
+
             return sortNone(taskA, taskB)
         }
         if (sort === 'ASCENDING') {
@@ -274,4 +286,5 @@ const render = (containerSelector) => {
   containerSelector.appendChild(renderFormElement());
   containerSelector.appendChild(renderTasks(sortedTasks));
 };
+loadFromLocalStorage()
 update();
